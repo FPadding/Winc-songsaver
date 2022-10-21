@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import SongForm from "./SongForm"
 import SongList from "./SongList"
+import { Link } from "react-router-dom"
 
 class SongOverview extends Component {
 
@@ -120,6 +121,7 @@ class SongOverview extends Component {
                     <SongList songs={this.state.songs} />
                 </table>
                 <button onClick={this.logState}>Log State</button>
+                <Link to="/about">Over mij</Link>
             </div>
         );
     }
