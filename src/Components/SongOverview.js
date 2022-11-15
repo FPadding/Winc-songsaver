@@ -9,14 +9,15 @@ class SongOverview extends Component {
         super()
         this.state =
         {
-            songs: [],
+            savedSongs: [],
+            displayedSongs: [],
             songValue: "",
             artistValue: "",
             genreValue: "",
             ratingValue: "",
             key: 0,
-            sortIndex: -1, //index for the table column the sorting category belongs to (titel = 0, genre = 2 etc.)
-            reversed: false,
+            sortIndex: -1, //index for the table column the list is sorted by (titel = 0, genre = 2 etc.)
+            isReversed: false,
         }
         this.addSong = this.addSong.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -32,31 +33,43 @@ class SongOverview extends Component {
         })
     }
 
-    sortList(array, sortIndex) { //
-        if (sortIndex > -1) {
-            const songKeys = ["song", "artist", "genre", "rating"]
-            const sortedSongs = array.sort((a, b) => {
-                const lowA = a[songKeys[sortIndex]].toLowerCase()
-                const lowB = b[songKeys[sortIndex]].toLowerCase()
-                if (lowA < lowB) {
-                    return -1;
-                }
-                if (lowA > lowB) {
-                    return 1;
-                }
-                return 0;
-            })
-            if (sortIndex === 3) sortedSongs.reverse() //not reversing would put low rated songs at the top
-            return sortedSongs
-        }
+    sortList(array, index) {
+        const sortCategories = ["song", "artist", "genre", "rating"] //
+        const sortedSongs = array.sort((a, b) => {
+            const lowA = a[sortCategories[index]].toLowerCase()
+            const lowB = b[sortCategories[index]].toLowerCase()
+            if (lowA < lowB) {
+                return -1
+            }
+            if (lowA > lowB) {
+                return 1
+            }
+            return 0
+        })
+        return sortedSongs
+    }
 
+    reverseSortList(array, index) {
+        const sortCategories = ["song", "artist", "genre", "rating"]
+        const sortedSongs = array.sort((a, b) => {
+            const lowA = a[sortCategories[index]].toLowerCase()
+            const lowB = b[sortCategories[index]].toLowerCase()
+            if (lowA > lowB) {
+                return -1
+            }
+            if (lowA < lowB) {
+                return 1
+            }
+            return 0
+        })
+        return sortedSongs
     }
 
     addSong(event) {
         event.preventDefault()
-        const { songs, songValue, artistValue, genreValue, ratingValue, sortIndex, key } = this.state
+        const { savedSongs, songValue, artistValue, genreValue, ratingValue, sortIndex, isReversed, key } = this.state
         let updatedSongs = [
-            ...songs,
+            ...savedSongs,
             {
                 song: songValue,
                 artist: artistValue,
@@ -65,40 +78,47 @@ class SongOverview extends Component {
                 key: key
             }
         ]
-        if (this.state.sortIndex > -1) {
-            updatedSongs = this.sortList(updatedSongs, sortIndex)
-            if (this.state.reversed) updatedSongs.reverse()
+        let updatedDisplayedSongs = updatedSongs
+        if (sortIndex > -1) {
+            if (isReversed || (isReversed === false && sortIndex === 3)) { //has an exception for rating (sortIndex === 3)
+                updatedDisplayedSongs = this.reverseSortList([...updatedSongs], sortIndex)
+            }
+            else {
+                updatedDisplayedSongs = this.sortList([...updatedSongs], sortIndex)
+            }
         }
         this.setState({
-            songs: updatedSongs,
+            savedSongs: updatedSongs,
+            displayedSongs: updatedDisplayedSongs,
             key: key + 1,
         })
+
     }
 
 
     sortSongs(event) {
-        console.log(event)
-        const { songs, sortIndex, reversed } = this.state
-        const clickedIndex = event.target.cellIndex
-        if (sortIndex !== clickedIndex) {
-            const sortedSongs = this.sortList(songs, clickedIndex)
-            this.setState({
-                songs: sortedSongs,
-                sortIndex: clickedIndex,
-                reversed: false
-            })
+        const { savedSongs, sortIndex, isReversed } = this.state
+        let newIndex = event.target.cellIndex
+        let sortedSongs = []
+        let newReversed = false
+        if (sortIndex !== newIndex) {
+            sortedSongs = newIndex !== 3 ? this.sortList([...savedSongs], newIndex) : this.reverseSortList([...savedSongs], newIndex)
+        } else if (isReversed === false) {
+            sortedSongs = newIndex !== 3 ? this.reverseSortList([...savedSongs], newIndex) : this.sortList([...savedSongs], newIndex)
+            newReversed = true
         } else {
-            const sortedSongs = [...songs].reverse()
-            this.setState({
-                songs: sortedSongs,
-                reversed: !reversed
-            })
+            sortedSongs = [...savedSongs]
+            newIndex = -1
         }
-
+        this.setState({
+            displayedSongs: sortedSongs,
+            isReversed: newReversed,
+            sortIndex: newIndex,
+        })
     }
     showTriangle(index) { //this method adds a small triangle to show which column the list is sorted by
         if (this.state.sortIndex === index) {
-            if (this.state.reversed) {
+            if (this.state.isReversed) {
                 return "reversed"
             }
             return "alphabetic"
@@ -131,10 +151,13 @@ class SongOverview extends Component {
                             <th className={this.showTriangle(3)}>Rating</th>
                         </tr>
                     </thead>
-                    <SongList songs={this.state.songs} />
+                    <SongList songs={this.state.displayedSongs} />
                 </table>
                 <Link to="/about"><button>Over dit project</button></Link>
-                {/* <button onClick={this.logState}>Log State</button> */}
+                {/* {<button onClick={this.logState}>Log State</button>} */}
+                <footer>
+                    Gemaakt door Frits Padding
+                </footer>
             </div>
         );
     }
