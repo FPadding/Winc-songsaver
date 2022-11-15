@@ -1,0 +1,118 @@
+//Color variables
+$pagebg: #111;
+$text: #fff;
+$form: #8cd8bf;
+$formhover: #63d0ac;
+$formactive: #cfebe2;
+$table: #91587b;
+$tablehover: #444;
+$triangle: #f6e461;
+
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: $pagebg;
+    color: $text;
+}
+
+h1 {
+    font-size: 70px;
+    text-align: center;
+    line-height: 40%;
+}
+
+select {
+    cursor: pointer;
+}
+
+
+
+input,
+select {
+    background-color: #111;
+    color: $text;
+    border: 2px solid $form;
+    border-radius: 3px;
+    outline: none;
+
+    &:focus {
+        border: 2px solid $formactive;
+    }
+}
+
+button {
+    background-color: $form;
+    color: black;
+    font-size: larger;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $formhover;
+    }
+
+    &:active {
+        background-color: $formactive;
+    }
+}
+
+
+form {
+    display: grid;
+    gap: 10px;
+
+    &>* {
+        &:nth-child(2) {
+            grid-area: 2 / 1;
+        }
+
+        &:nth-child(3) {
+            grid-area: 1 / 2;
+        }
+
+        &:nth-child(4) {
+            grid-area: 2 / 2;
+        }
+
+        &:nth-child(5) {
+            grid-area: 1 / 3 / 3 / 4;
+        }
+    }
+}
+
+table {
+    margin: 40px 0;
+    text-align: left;
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+th {
+    border-bottom: 3px solid $table;
+    cursor: pointer;
+}
+
+th,
+td {
+    padding: 7px;
+    border-right: 3px solid $table;
+
+    &:last-child {
+        border-right: none;
+    }
+}
+
+tbody tr:hover {
+    background-color: $tablehover;
+}
+
+.alphabetic::after {
+    content: " ▲";
+    color: $triangle
+}
+
+.reversed::after {
+    content: " ▼";
+    color: $triangle;
+}

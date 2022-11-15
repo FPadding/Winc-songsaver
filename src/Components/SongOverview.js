@@ -15,13 +15,14 @@ class SongOverview extends Component {
             genreValue: "",
             ratingValue: "",
             key: 0,
-            sortedBy: "",
+            sortIndex: -1, //index for the table column the sorting category belongs to (titel = 0, genre = 2 etc.)
             reversed: false,
         }
         this.addSong = this.addSong.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.sortSongs = this.sortSongs.bind(this)
         this.logState = this.logState.bind(this)
+        this.showTriangle = this.showTriangle.bind(this)
     }
 
     handleChange(event) {
@@ -31,11 +32,12 @@ class SongOverview extends Component {
         })
     }
 
-    sortList(array, sortBy) {
-        if (sortBy) {
+    sortList(array, sortIndex) { //
+        if (sortIndex > -1) {
+            const songKeys = ["song", "artist", "genre", "rating"]
             const sortedSongs = array.sort((a, b) => {
-                const lowA = a[sortBy].toLowerCase()
-                const lowB = b[sortBy].toLowerCase()
+                const lowA = a[songKeys[sortIndex]].toLowerCase()
+                const lowB = b[songKeys[sortIndex]].toLowerCase()
                 if (lowA < lowB) {
                     return -1;
                 }
@@ -44,7 +46,7 @@ class SongOverview extends Component {
                 }
                 return 0;
             })
-            if (sortBy === "rating") sortedSongs.reverse() //not reversing would put low rated songs at the top
+            if (sortIndex === 3) sortedSongs.reverse() //not reversing would put low rated songs at the top
             return sortedSongs
         }
 
@@ -52,7 +54,7 @@ class SongOverview extends Component {
 
     addSong(event) {
         event.preventDefault()
-        const { songs, songValue, artistValue, genreValue, ratingValue, sortedBy, key } = this.state
+        const { songs, songValue, artistValue, genreValue, ratingValue, sortIndex, key } = this.state
         let updatedSongs = [
             ...songs,
             {
@@ -63,8 +65,8 @@ class SongOverview extends Component {
                 key: key
             }
         ]
-        if (this.state.sortedBy) {
-            updatedSongs = this.sortList(updatedSongs, sortedBy)
+        if (this.state.sortIndex > -1) {
+            updatedSongs = this.sortList(updatedSongs, sortIndex)
             if (this.state.reversed) updatedSongs.reverse()
         }
         this.setState({
@@ -75,13 +77,14 @@ class SongOverview extends Component {
 
 
     sortSongs(event) {
-        const { songs, sortedBy, reversed } = this.state
-        const clicked = event.target.innerText.toLowerCase()
-        if (sortedBy !== clicked) {
-            const sortedSongs = this.sortList(songs, clicked)
+        console.log(event)
+        const { songs, sortIndex, reversed } = this.state
+        const clickedIndex = event.target.cellIndex
+        if (sortIndex !== clickedIndex) {
+            const sortedSongs = this.sortList(songs, clickedIndex)
             this.setState({
                 songs: sortedSongs,
-                sortedBy: clicked,
+                sortIndex: clickedIndex,
                 reversed: false
             })
         } else {
@@ -93,14 +96,24 @@ class SongOverview extends Component {
         }
 
     }
+    showTriangle(index) { //this method adds a small triangle to show which column the list is sorted by
+        if (this.state.sortIndex === index) {
+            if (this.state.reversed) {
+                return "reversed"
+            }
+            return "alphabetic"
+        }
+        return ""
+    }
 
-    logState() {
+    logState() { //debug function
         console.log(this.state)
     }
 
     render() {
         return (
             <div>
+                <h1>SONGSAVER</h1>
                 <SongForm
                     addSong={this.addSong}
                     songValue={this.state.songValue}
@@ -109,19 +122,19 @@ class SongOverview extends Component {
                     ratingValue={this.state.ratingValue}
                     handleChange={this.handleChange}
                 />
-                <table style={{ width: "100%" }}>
+                <table>
                     <thead>
-                        <tr className="song-header">
-                            <th className="song-row__item" onClick={this.sortSongs}>Song</th>
-                            <th className="song-row__item" onClick={this.sortSongs}>Artist</th>
-                            <th className="song-row__item" onClick={this.sortSongs}>Genre</th>
-                            <th className="song-row__item" onClick={this.sortSongs}>Rating</th>
+                        <tr onClick={this.sortSongs}>
+                            <th className={this.showTriangle(0)}>Titel</th>
+                            <th className={this.showTriangle(1)}>Artiest</th>
+                            <th className={this.showTriangle(2)}>Genre</th>
+                            <th className={this.showTriangle(3)}>Rating</th>
                         </tr>
                     </thead>
                     <SongList songs={this.state.songs} />
                 </table>
-                <button onClick={this.logState}>Log State</button>
-                <Link to="/about">Over mij</Link>
+                <Link to="/about"><button>Over dit project</button></Link>
+                {/* <button onClick={this.logState}>Log State</button> */}
             </div>
         );
     }

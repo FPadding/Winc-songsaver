@@ -1,4 +1,3 @@
-import './App.css';
 import SongOverview from './Components/SongOverview';
 
 function App() {

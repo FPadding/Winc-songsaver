@@ -2,8 +2,10 @@ import { Link } from "react-router-dom"
 
 const About = () =>
     <div>
-        <h1>Over Mij</h1>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quibusdam, laudantium, deleniti modi vel recusandae quod impedit labore perspiciatis blanditiis expedita, vitae mollitia culpa quas laboriosam accusamus sit autem? Ab, dicta?</p>
-        <Link to="/">Terug</Link>
+        <h1>Over dit project</h1>
+        <p>
+            Voeg nummers toe en klik bovenin de tabel om te sorteren. Klik een tweede keer voor z-a.
+        </p>
+        <Link to="/"><button>Terug</button></Link>
     </div>
 export default About

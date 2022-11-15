@@ -2,7 +2,7 @@ import React from "react"
 
 const SongForm = ({ addSong, songValue, artistValue, genreValue, ratingValue, handleChange }) =>
     <div>
-        <form onSubmit={addSong}>
+        <form onSubmit={addSong} autoComplete="off">
             <input
                 name="songValue"
                 value={songValue}
@@ -21,13 +21,20 @@ const SongForm = ({ addSong, songValue, artistValue, genreValue, ratingValue, ha
                 placeholder="genre"
                 onChange={handleChange}
             />
-            <input
+            <select
                 name="ratingValue"
                 value={ratingValue}
-                placeholder="rating"
                 onChange={handleChange}
-            />
-            <button>toevoegen</button>
+            >
+                <option selected hidden>rating</option>
+                <option disabled>rating</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+            <button>Voeg toe</button>
         </form>
     </div>
 

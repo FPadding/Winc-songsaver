@@ -1,13 +1,98 @@
+@charset "UTF-8";
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: #111;
+  color: #fff;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+h1 {
+  font-size: 70px;
+  text-align: center;
+  line-height: 40%;
 }
+
+select {
+  cursor: pointer;
+}
+
+input,
+select {
+  background-color: #111;
+  color: #fff;
+  border: 2px solid #8cd8bf;
+  border-radius: 3px;
+  outline: none;
+}
+input:focus,
+select:focus {
+  border: 2px solid #cfebe2;
+}
+
+button {
+  background-color: #8cd8bf;
+  color: black;
+  font-size: larger;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #63d0ac;
+}
+button:active {
+  background-color: #cfebe2;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+}
+form > *:nth-child(2) {
+  grid-area: 2/1;
+}
+form > *:nth-child(3) {
+  grid-area: 1/2;
+}
+form > *:nth-child(4) {
+  grid-area: 2/2;
+}
+form > *:nth-child(5) {
+  grid-area: 1/3/3/4;
+}
+
+table {
+  margin: 40px 0;
+  text-align: left;
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+th {
+  border-bottom: 3px solid #91587b;
+  cursor: pointer;
+}
+
+th,
+td {
+  padding: 7px;
+  border-right: 3px solid #91587b;
+}
+th:last-child,
+td:last-child {
+  border-right: none;
+}
+
+tbody tr:hover {
+  background-color: #444;
+}
+
+.alphabetic::after {
+  content: " ▲";
+  color: #f6e461;
+}
+
+.reversed::after {
+  content: " ▼";
+  color: #f6e461;
+}/*# sourceMappingURL=index.css.map */
